@@ -1,4 +1,4 @@
-package com.h2ve.smallhabits
+package com.h2ve.smallhabits.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

@@ -1,11 +1,15 @@
-package com.h2ve.smallhabits
+package com.h2ve.smallhabits.view
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.h2ve.smallhabits.*
 import com.h2ve.smallhabits.databinding.ActivityMainBinding
+import com.h2ve.smallhabits.model.LoginRes
+import com.h2ve.smallhabits.network.ApiService
+import com.h2ve.smallhabits.repository.MySharedPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

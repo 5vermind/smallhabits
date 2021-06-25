@@ -1,5 +1,8 @@
-package com.h2ve.smallhabits
+package com.h2ve.smallhabits.network
 
+import com.h2ve.smallhabits.model.LoginRes
+import com.h2ve.smallhabits.model.LogoutRes
+import com.h2ve.smallhabits.model.SignUpRes
 import okhttp3.Interceptor
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
@@ -32,13 +35,12 @@ interface ApiService {
 
 
     companion object {
-        private const val BASE_URL = "base url" //put base url
+        private const val BASE_URL = "small-habit.herokuapp.com/"
 
         fun create(): ApiService {
-            val httpLoggingInterceptor = HttpLoggingInterceptor()
-            httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+            val httpLoggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
-            val headerInterceptor = Interceptor { //put jwt token in header
+            val headerInterceptor = Interceptor { //TODO token
                 val request = it.request()
                     .newBuilder()
                     .build()
@@ -47,7 +49,7 @@ interface ApiService {
 
             val client = OkHttpClient.Builder()
                 .addInterceptor(headerInterceptor)
-                .cookieJar(JavaNetCookieJar(CookieManager())) //if use jwt -> no use?
+                .cookieJar(JavaNetCookieJar(CookieManager()))
                 .addInterceptor(httpLoggingInterceptor)
                 .build()
 

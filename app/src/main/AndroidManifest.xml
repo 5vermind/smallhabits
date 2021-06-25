@@ -8,16 +8,17 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Smallhabits">
-        <activity android:name=".MainActivity">
+        android:theme="@style/Theme.Smallhabits"
+        android:name=".di.SmallHabitsApp">
+        <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUpActivity"/>
-        <activity android:name=".BoardActivity"/>
+        <activity android:name=".view.SignUpActivity"/>
+        <activity android:name=".view.BoardActivity"/>
     </application>
 
 </manifest>

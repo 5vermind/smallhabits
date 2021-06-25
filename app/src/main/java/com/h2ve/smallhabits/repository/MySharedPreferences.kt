@@ -1,4 +1,4 @@
-package com.h2ve.smallhabits
+package com.h2ve.smallhabits.repository
 
 import android.content.Context
 import android.content.SharedPreferences
