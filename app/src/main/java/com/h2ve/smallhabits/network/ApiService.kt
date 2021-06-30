@@ -18,21 +18,21 @@ interface ApiService {
     @FormUrlEncoded
     @POST("user/login")
     fun reqLogin(
-        @Field("uid") uid:String,
-        @Field("upw") upw:String
-    ): Call<LoginRes>
+        @Field("userId") uid:String,
+        @Field("password") upw:String
+    ): Call<String>
 
-    @GET("user/logout")
-    fun reqLogout(): Call<LogoutRes>
-
-    @FormUrlEncoded
-    @POST("user/signup")
-    fun reqSignUp(
-            @Field("uid") uid:String,
-            @Field("upw") upw:String,
-            @Field("nickname") nickname:String
-    ): Call<SignUpRes>
-
+//    @GET("user/logout")
+//    fun reqLogout(): Call<LogoutRes>
+//
+//    @FormUrlEncoded
+//    @POST("user/signup")
+//    fun reqSignUp(
+//            @Field("uid") uid:String,
+//            @Field("upw") upw:String,
+//            @Field("nickname") nickname:String
+//    ): Call<SignUpRes>
+//
 
     companion object {
         private const val BASE_URL = "small-habit.herokuapp.com/"

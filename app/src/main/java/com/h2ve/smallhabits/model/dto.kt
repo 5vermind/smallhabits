@@ -1,4 +1,4 @@
-package com.h2ve.smallhabits
+package com.h2ve.smallhabits.model
 
 data class LoginRes (
         var success: Boolean,
@@ -16,3 +16,36 @@ data class SignUpRes (
         var success: Boolean,
         var resultCode: String
         )
+
+data class Login(
+        var userId: String,
+        var password: String
+)
+
+data class Register(
+        var userId: String,
+        var password: String,
+        var passwordAgain: String,
+        var name: String
+)
+
+data class Habit(
+        var title: String,
+        var detail: String,
+        var timeToDo: String,
+        var placeToDo: String,
+        var rating: Int,
+        var nextHabit: String
+)
+
+data class HabitRes(
+        var title: String,
+        var detail: String,
+        var timeToDo: String,
+        var placeToDo: String,
+        var rating: Int,
+        var nextHabit: String,
+        var _id: String,
+        var uId: String,
+        var calendar: Array<String>
+)
