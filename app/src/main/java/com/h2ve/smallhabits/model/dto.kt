@@ -29,7 +29,7 @@ data class Register(
         var name: String
 )
 
-data class Habit(
+data class HabitPost(
         var title: String,
         var detail: String,
         var timeToDo: String,

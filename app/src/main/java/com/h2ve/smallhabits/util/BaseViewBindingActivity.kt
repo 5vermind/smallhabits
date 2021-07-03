@@ -8,7 +8,7 @@ import androidx.viewbinding.ViewBinding
 abstract class BaseViewBindingActivity<B: ViewBinding>(val bindingFactory: (LayoutInflater) -> B): AppCompatActivity() {
 
     private var _binding: B? = null
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

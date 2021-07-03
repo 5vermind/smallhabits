@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Smallhabits"
         android:name=".di.SmallHabitsApp">
-        <activity android:name=".view.MainActivity">
+        <activity android:name=".view.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
