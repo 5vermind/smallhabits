@@ -5,16 +5,11 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import com.h2ve.smallhabits.R
 import com.h2ve.smallhabits.model.SignUpRes
 import com.h2ve.smallhabits.databinding.ActivitySignupBinding
 import com.h2ve.smallhabits.viewmodel.RegisterViewModel
-import com.h2ve.smallhabits.viewmodel.RegisterViewModel.Companion.ID_POLICY
-import com.h2ve.smallhabits.viewmodel.RegisterViewModel.Companion.NICKNAME_POLICY
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.util.regex.Pattern
 
 
 class SignUpActivity: AppCompatActivity() {
@@ -104,7 +99,7 @@ class SignUpActivity: AppCompatActivity() {
             val upw = binding.pw.text.toString()
             val nickname = binding.nickname.text.toString()
 
-            Intent(this@SignUpActivity, BoardActivity::class.java).apply {
+            Intent(this@SignUpActivity, MainActivity::class.java).apply {
                 startActivity(this)
             }
 
@@ -125,7 +120,7 @@ class SignUpActivity: AppCompatActivity() {
                             MySharedPreferences.setUserId(this@SignUpActivity, uid)
                             MySharedPreferences.setUserPass(this@SignUpActivity, upw)
                             MySharedPreferences.setUserNick(this@SignUpActivity, nickname)
-                            Intent(this@SignUpActivity, BoardActivity::class.java).apply {
+                            Intent(this@SignUpActivity, MainActivity::class.java).apply {
                                 startActivity(this)
                             }
                         }
