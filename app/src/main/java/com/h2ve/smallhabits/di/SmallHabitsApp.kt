@@ -3,7 +3,8 @@ package com.h2ve.smallhabits.di
 import android.app.Application
 import com.h2ve.smallhabits.db.SmallHabitsDatabase
 import com.h2ve.smallhabits.network.ApiService
-import com.h2ve.smallhabits.viewmodel.RegisterViewModel
+import com.h2ve.smallhabits.repository.authModule
+import com.h2ve.smallhabits.viewmodel.AuthViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.android.viewmodel.dsl.viewModel
@@ -20,7 +21,8 @@ class SmallHabitsApp : Application() {
             modules(
                 networkModule,
                 databaseModule,
-                viewModelModule
+                viewModelModule,
+                authModule
             )
         }
     }
@@ -35,8 +37,9 @@ val databaseModule = module {
 }
 
 val viewModelModule = module {
-    viewModel { RegisterViewModel() }
+    viewModel { AuthViewModel(get()) }
 }
+
 
 //val repositoryModule = module {
 //    factory { ViewModelProvider.AndroidViewModelFactory(get()) }

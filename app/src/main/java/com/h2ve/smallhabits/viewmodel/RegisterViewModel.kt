@@ -1,12 +1,22 @@
 package com.h2ve.smallhabits.viewmodel
 
+import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.h2ve.smallhabits.model.Register
+import com.h2ve.smallhabits.model.RegisterRes
+import com.h2ve.smallhabits.repository.AuthRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import retrofit2.Response
+import java.lang.Exception
 import java.util.regex.Pattern
 
-class RegisterViewModel : ViewModel() {
-
+class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
     companion object {
         const val ID_POLICY: String = "4~12자리의 대소문자/숫자만 가능합니다."
         const val NICKNAME_POLICY: String = "2~10자리의 한글/대소문자/숫자만 가능합니다."
@@ -95,6 +105,27 @@ class RegisterViewModel : ViewModel() {
                 (data.parent.parent as TextInputLayout).error = error
             } else {
                 data.error = error
+            }
+        }
+    }
+
+    fun registerUser(userId:String, password:String, passwordAgain:String, name:String){
+        CoroutineScope(Dispatchers.IO).launch {
+            val registerResponse = repository.createUser(userId, password, passwordAgain, name)
+            if(registerResponse.isSuccessful){
+                Log.d("LKJLKJLKJLKJ", "registerUser: ${registerResponse.body()?.userId}")
+                //성공시 로직
+                //로그인 자동으로 해주고 토큰 저장하고 메인화면까지
+            }
+        }
+    }
+
+    fun loginUser(userId:String, password:String){
+        CoroutineScope(Dispatchers.IO).launch {
+            val loginResponse = repository.getUser(userId, password)
+            if(loginResponse.isSuccessful){
+                Log.d("LKJLKJLKJLKJ", "registerUser: ${loginResponse.body()?.token}")
+                //토큰 저장하고 메인 화면으로
             }
         }
     }

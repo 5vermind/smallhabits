@@ -4,24 +4,25 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.h2ve.smallhabits.R
-import com.h2ve.smallhabits.model.SignUpRes
+import com.h2ve.smallhabits.model.RegisterRes
 import com.h2ve.smallhabits.databinding.ActivitySignupBinding
-import com.h2ve.smallhabits.viewmodel.RegisterViewModel
-import com.h2ve.smallhabits.viewmodel.RegisterViewModel.Companion.ID_POLICY
-import com.h2ve.smallhabits.viewmodel.RegisterViewModel.Companion.NICKNAME_POLICY
+import com.h2ve.smallhabits.network.ApiService
+import com.h2ve.smallhabits.repository.AuthRepository
+import com.h2ve.smallhabits.viewmodel.AuthViewModel
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.regex.Pattern
+import kotlin.math.log
 
 
 class SignUpActivity: AppCompatActivity() {
 
-    private val vm: RegisterViewModel by viewModel()
-
-    var signup: SignUpRes? = null
+    private val vm: AuthViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,37 +103,10 @@ class SignUpActivity: AppCompatActivity() {
 
             val uid = binding.id.text.toString()
             val upw = binding.pw.text.toString()
+            val pwConfirm = binding.confirmPw.text.toString()
             val nickname = binding.nickname.text.toString()
 
-            Intent(this@SignUpActivity, BoardActivity::class.java).apply {
-                startActivity(this)
-            }
-
-            /*
-            if(isValidId(binding.id, uid) && isValidPassword(binding.pw, upw) && isValidNick(binding.nickname, nickname) && (binding.confirmPw.text.toString() == binding.pw.text.toString())) {
-                api.reqSignUp(uid, upw, nickname).enqueue(object : Callback<SignUpRes> {
-                    override fun onFailure(call: Call<SignUpRes>, t: Throwable) {
-                        Toast.makeText(this@SignUpActivity, "Failed connection", Toast.LENGTH_SHORT).show()
-                    }
-
-                    override fun onResponse(call: Call<SignUpRes>, response: Response<SignUpRes>) {
-                        signup = response.body()
-                        if (signup?.success == null) {
-                            Toast.makeText(this@SignUpActivity, "sign up failed", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(this@SignUpActivity, "success: " + signup?.success.toString() +
-                                    "\nresult code: " + signup?.resultCode, Toast.LENGTH_SHORT).show()
-                            MySharedPreferences.setUserId(this@SignUpActivity, uid)
-                            MySharedPreferences.setUserPass(this@SignUpActivity, upw)
-                            MySharedPreferences.setUserNick(this@SignUpActivity, nickname)
-                            Intent(this@SignUpActivity, BoardActivity::class.java).apply {
-                                startActivity(this)
-                            }
-                        }
-                    }
-                })
-            }
-             */
+            vm.registerUser(uid, upw, pwConfirm, nickname)
         }
 
     }

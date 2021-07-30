@@ -1,10 +1,8 @@
 package com.h2ve.smallhabits.model
 
 data class LoginRes (
-        var success: Boolean,
-        var resultCode: String,
-        var id: Int,
-        var nickname: String
+        var token: String,
+        var message: String
         )
 
 data class LogoutRes (
@@ -12,9 +10,10 @@ data class LogoutRes (
         var resultCode: String
         )
 
-data class SignUpRes (
-        var success: Boolean,
-        var resultCode: String
+data class RegisterRes (
+        var userId: String,
+        var name: String,
+        var message: String
         )
 
 data class Login(

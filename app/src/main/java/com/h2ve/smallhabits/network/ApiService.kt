@@ -2,12 +2,13 @@ package com.h2ve.smallhabits.network
 
 import com.h2ve.smallhabits.model.LoginRes
 import com.h2ve.smallhabits.model.LogoutRes
-import com.h2ve.smallhabits.model.SignUpRes
+import com.h2ve.smallhabits.model.RegisterRes
 import okhttp3.Interceptor
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -16,26 +17,27 @@ import java.net.CookieManager
 interface ApiService {
 
     @FormUrlEncoded
-    @POST("user/login")
-    fun reqLogin(
-        @Field("userId") uid:String,
-        @Field("password") upw:String
-    ): Call<String>
+    @POST("auth/login")
+    suspend fun reqAuthLogin(
+        @Field("userId") userId:String,
+        @Field("password") password:String
+    ): Response<LoginRes>
 
 //    @GET("user/logout")
 //    fun reqLogout(): Call<LogoutRes>
 //
-//    @FormUrlEncoded
-//    @POST("user/signup")
-//    fun reqSignUp(
-//            @Field("uid") uid:String,
-//            @Field("upw") upw:String,
-//            @Field("nickname") nickname:String
-//    ): Call<SignUpRes>
+    @FormUrlEncoded
+    @POST("auth/register")
+    suspend fun reqAuthRegister(
+            @Field("userId") userId:String,
+            @Field("password") password:String,
+            @Field("passwordAgain") passwordAgain:String,
+            @Field("name") name: String
+    ): Response<RegisterRes>
 //
 
     companion object {
-        private const val BASE_URL = "small-habit.herokuapp.com/"
+        private const val BASE_URL = "https://small-habit.herokuapp.com/"
 
         fun create(): ApiService {
             val httpLoggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
