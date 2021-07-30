@@ -6,8 +6,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import com.h2ve.smallhabits.R
 import com.h2ve.smallhabits.model.RegisterRes
 import com.h2ve.smallhabits.databinding.ActivitySignupBinding

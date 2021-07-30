@@ -27,7 +27,7 @@ class LoginActivity : AppCompatActivity() {
         }
         else { // SharedPreferences 안에 값이 저장되어 있을 때 -> 게시판으로 이동s
             Toast.makeText(this, "${MySharedPreferences.getUserNick(this)}님 자동 로그인 되었습니다.", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, BoardActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
@@ -48,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
 
         binding.skipBtn.setOnClickListener {
             MySharedPreferences.setUserId(this, "no")
-            val intent = Intent(this@LoginActivity, BoardActivity::class.java)
+            val intent = Intent(this@LoginActivity, MainActivity::class.java)
             startActivity(intent)
         }
     }

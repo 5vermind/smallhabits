@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
+    app:startDestination="@id/boardFragment">
+
+    <fragment
+        android:id="@+id/boardFragment"
+        android:name="com.h2ve.smallhabits.view.BoardFragment"
+        android:label="BoardFragment" >
+        <action
+            android:id="@+id/action_boardFragment_to_chainFragment"
+            app:destination="@id/chainFragment" />
+        <action
+            android:id="@+id/action_boardFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chainFragment"
+        android:name="com.h2ve.smallhabits.view.ChainFragment"
+        android:label="ChainFragment" >
+        <action
+            android:id="@+id/action_chainFragment_to_boardFragment"
+            app:destination="@id/boardFragment" />
+        <action
+            android:id="@+id/action_chainFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.h2ve.smallhabits.view.SettingsFragment"
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/action_settingsFragment_to_boardFragment"
+            app:destination="@id/boardFragment" />
+    </fragment>
+</navigation>
