@@ -11,7 +11,7 @@ import androidx.viewbinding.ViewBinding
 abstract class BaseViewBindingFragment<B: ViewBinding>: Fragment() {
 
     private var _binding: B? = null
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
     var fragmentContext: Context? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
