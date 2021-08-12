@@ -3,7 +3,7 @@ package com.h2ve.smallhabits.repository
 import android.content.Context
 import android.content.SharedPreferences
 
-object MySharedPreferences {
+object SharedPreferencesManager {
     private val MY_ACCOUNT : String = "MY_ACCOUNT"
 
     fun setUserId(context: Context, input: String) {

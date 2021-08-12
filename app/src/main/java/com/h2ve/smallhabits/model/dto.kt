@@ -48,3 +48,15 @@ data class HabitRes(
         var uId: String,
         var calendar: Array<String>
 )
+
+data class HabitTemp(
+        var title: String,
+        var progress: Int,
+        var thumbnail: String,
+//        var detail: String,
+//        var timeToDo: String,
+//        var placeToDo: String,
+//        var rating: Int,
+//        var nextHabit: String,
+        var id: Int
+)

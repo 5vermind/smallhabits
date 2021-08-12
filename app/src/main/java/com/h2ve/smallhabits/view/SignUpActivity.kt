@@ -4,21 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.h2ve.smallhabits.R
-import com.h2ve.smallhabits.model.RegisterRes
 import com.h2ve.smallhabits.databinding.ActivitySignupBinding
-import com.h2ve.smallhabits.network.ApiService
-import com.h2ve.smallhabits.repository.AuthRepository
 import com.h2ve.smallhabits.viewmodel.AuthViewModel
-import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.util.regex.Pattern
-import kotlin.math.log
 
 
-class SignUpActivity: AppCompatActivity() {
+class SignUpActivity : AppCompatActivity() {
 
     private val vm: AuthViewModel by viewModel()
 
@@ -35,8 +28,8 @@ class SignUpActivity: AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
-                if (!binding.id.text.isNullOrEmpty()){
-                    if (!vm.isValidId(binding.id, binding.id.text.toString())){
+                if (!binding.id.text.isNullOrEmpty()) {
+                    if (!vm.isValidId(binding.id, binding.id.text.toString())) {
                         vm.setError(binding.id, getString(R.string.sign_up_id_policy))
                     }
                 }
@@ -51,8 +44,8 @@ class SignUpActivity: AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
-                if (!binding.nickname.text.isNullOrEmpty()){
-                    if (!vm.isValidNick(binding.nickname, binding.nickname.text.toString())){
+                if (!binding.nickname.text.isNullOrEmpty()) {
+                    if (!vm.isValidNick(binding.nickname, binding.nickname.text.toString())) {
                         vm.setError(binding.nickname, getString(R.string.sign_up_nickname_policy))
                     }
                 }
@@ -67,9 +60,12 @@ class SignUpActivity: AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
-                if (!binding.pw.text.isNullOrEmpty() && !binding.confirmPw.text.isNullOrEmpty()){
-                    if (binding.confirmPw.text.toString() != binding.pw.text.toString()){
-                        vm.setError(binding.confirmPw, getString(R.string.sign_up_mismatch_password))
+                if (!binding.pw.text.isNullOrEmpty() && !binding.confirmPw.text.isNullOrEmpty()) {
+                    if (binding.confirmPw.text.toString() != binding.pw.text.toString()) {
+                        vm.setError(
+                            binding.confirmPw,
+                            getString(R.string.sign_up_mismatch_password)
+                        )
                     }
                 }
             }
@@ -83,11 +79,14 @@ class SignUpActivity: AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
-                if (!binding.pw.text.isNullOrEmpty() && !binding.confirmPw.text.isNullOrEmpty()){
-                    if (binding.confirmPw.text.toString() != binding.pw.text.toString()){
-                        vm.setError(binding.confirmPw, getString(R.string.sign_up_mismatch_password))
+                if (!binding.pw.text.isNullOrEmpty() && !binding.confirmPw.text.isNullOrEmpty()) {
+                    if (binding.confirmPw.text.toString() != binding.pw.text.toString()) {
+                        vm.setError(
+                            binding.confirmPw,
+                            getString(R.string.sign_up_mismatch_password)
+                        )
                     }
-                    if (!vm.isValidPassword(binding.pw, binding.pw.text.toString())){
+                    if (!vm.isValidPassword(binding.pw, binding.pw.text.toString())) {
                         vm.setError(binding.pw, getString(R.string.sign_up_password_policy))
                     }
                 }
@@ -105,6 +104,37 @@ class SignUpActivity: AppCompatActivity() {
             val nickname = binding.nickname.text.toString()
 
             vm.registerUser(uid, upw, pwConfirm, nickname)
+            Intent(this@SignUpActivity, MainActivity::class.java).apply {
+                startActivity(this)
+            }
+
+            /*
+            if(isValidId(binding.id, uid) && isValidPassword(binding.pw, upw) && isValidNick(binding.nickname, nickname) && (binding.confirmPw.text.toString() == binding.pw.text.toString())) {
+                api.reqSignUp(uid, upw, nickname).enqueue(object : Callback<SignUpRes> {
+                    override fun onFailure(call: Call<SignUpRes>, t: Throwable) {
+                        Toast.makeText(this@SignUpActivity, "Failed connection", Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onResponse(call: Call<SignUpRes>, response: Response<SignUpRes>) {
+                        signup = response.body()
+                        if (signup?.success == null) {
+                            Toast.makeText(this@SignUpActivity, "sign up failed", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this@SignUpActivity, "success: " + signup?.success.toString() +
+                                    "\nresult code: " + signup?.resultCode, Toast.LENGTH_SHORT).show()
+
+                            SharedPreferencesManager.setUserId(this@SignUpActivity, uid)
+                            SharedPreferencesManager.setUserPass(this@SignUpActivity, upw)
+                            SharedPreferencesManager.setUserNick(this@SignUpActivity, nickname)
+
+                            Intent(this@SignUpActivity, MainActivity::class.java).apply {
+                                startActivity(this)
+                            }
+                        }
+                    }
+                })
+            }
+             */
         }
 
     }
