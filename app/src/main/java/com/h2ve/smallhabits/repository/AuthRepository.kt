@@ -3,10 +3,9 @@ package com.h2ve.smallhabits.repository
 import com.h2ve.smallhabits.model.LoginResponse
 import com.h2ve.smallhabits.model.RegisterResponse
 import com.h2ve.smallhabits.network.ApiService
-import com.h2ve.smallhabits.util.NetworkUtils
 import kotlinx.coroutines.*
 import org.koin.dsl.module
-import retrofit2.Response
+import kotlin.coroutines.CoroutineContext
 
 
 val authModule = module {
@@ -17,42 +16,22 @@ class AuthRepository(
     private val api: ApiService,
     private val sharedPreferences: MySharedPreferences,
     private val job: CompletableJob = SupervisorJob(),
-    private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + job),
+    private val coroutineContext: CoroutineContext = Dispatchers.IO + job
 ) {
 
     suspend fun createUser(userId: String, password: String, passwordAgain: String, name: String): ResultWrapper<RegisterResponse> {
-        val fetchRegisterResponse: Deferred<Response<RegisterResponse>> = scope.async {
-            api.postAuthRegister(userId, password, passwordAgain, name)
-        }
-
-        return try{
-            val registerResponse = fetchRegisterResponse.await()
-            if (registerResponse.isSuccessful){
-                ResultWrapper.Success(registerResponse.body()!!)
-            }else{
-                ResultWrapper.GenericError(NetworkUtils.getErrorResponse(registerResponse.errorBody()!!))
-            }
-        } catch (e: Throwable){
-            ResultWrapper.NetworkError
-        }
+        return safeApiCall(coroutineContext) { api.postAuthRegister(userId, password, passwordAgain, name) }
     }
 
     suspend fun login(userId: String, password: String): ResultWrapper<LoginResponse> {
-        val fetchLoginResponse: Deferred<Response<LoginResponse>> = scope.async {
-            api.postAuthLogin(userId, password)
-        }
-
-        return try {
-            val loginResponse = fetchLoginResponse.await()
-            if(loginResponse.isSuccessful){
-                loginResponse.body()?.token?.let { sharedPreferences.setToken(loginResponse.body()!!.token) }
-                ResultWrapper.Success(loginResponse.body()!!)
-            } else{
-                ResultWrapper.GenericError(NetworkUtils.getErrorResponse(loginResponse.errorBody()!!))
+        val response: ResultWrapper<LoginResponse> = safeApiCall(coroutineContext) { api.postAuthLogin(userId, password) }
+        when(response){
+            is ResultWrapper.Success -> {
+                sharedPreferences.setToken(response.value.token)
             }
-        } catch (e: Throwable){
-            ResultWrapper.NetworkError
+            else -> {}
         }
+        return response
     }
 
     fun isLogin(): Boolean {

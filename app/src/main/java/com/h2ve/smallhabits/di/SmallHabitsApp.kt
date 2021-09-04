@@ -42,7 +42,7 @@ val databaseModule = module {
 }
 
 val viewModelModule = module {
-    viewModel { AuthViewModel(get(), androidContext()) }
+    viewModel { AuthViewModel(get(), get()) }
     viewModel { HabitViewModel(get()) }
 }
 

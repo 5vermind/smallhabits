@@ -37,6 +37,7 @@ class LoginActivity : AppCompatActivity() {
         binding.signupBtn.setOnClickListener {
             val intent = Intent(this@LoginActivity, SignUpActivity::class.java)
             startActivity(intent)
+//            sharedPreferences.clearUser()
         }
 
         binding.skipBtn.setOnClickListener {
@@ -47,9 +48,9 @@ class LoginActivity : AppCompatActivity() {
 
         vm.loginLiveData.observe(this){
             when(vm.loginLiveData.value){
-                is ViewModelTransferObject.GenericError -> Toast.makeText(this, "${(vm.loginLiveData.value as ViewModelTransferObject.GenericError).error?.message}", Toast.LENGTH_SHORT).show()
-                is ViewModelTransferObject.NetworkError -> Toast.makeText(this, "서버 에러 잠시 후 다시 시도해 주세요", Toast.LENGTH_SHORT).show()
-                is ViewModelTransferObject.Success -> {
+                is ResultWrapper.GenericError -> Toast.makeText(this, "${(vm.loginLiveData.value as ResultWrapper.GenericError).error?.message}", Toast.LENGTH_SHORT).show()
+                is ResultWrapper.NetworkError -> Toast.makeText(this, "서버 에러 잠시 후 다시 시도해 주세요", Toast.LENGTH_SHORT).show()
+                is ResultWrapper.Success -> {
                     //화면전환
                     Toast.makeText(this, "성공", Toast.LENGTH_SHORT).show()
                 }

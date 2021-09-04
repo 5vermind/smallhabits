@@ -1,18 +1,17 @@
 package com.h2ve.smallhabits.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.*
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.h2ve.smallhabits.model.LoginResponse
 import com.h2ve.smallhabits.model.RegisterResponse
-import com.h2ve.smallhabits.model.ViewModelTransferObject
 import com.h2ve.smallhabits.repository.AuthRepository
+import com.h2ve.smallhabits.repository.MySharedPreferences
 import com.h2ve.smallhabits.repository.ResultWrapper
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
-class AuthViewModel(private val repository: AuthRepository, private val context: Context) : ViewModel() {
+class AuthViewModel(private val repository: AuthRepository, private val sharedPreferences: MySharedPreferences) : ViewModel() {
     companion object {
         const val ID_POLICY: String = "4~12자리의 대소문자/숫자만 가능합니다."
         const val NICKNAME_POLICY: String = "2~10자리의 한글/대소문자/숫자만 가능합니다."
@@ -20,11 +19,11 @@ class AuthViewModel(private val repository: AuthRepository, private val context:
         const val MATCH_PASSWORD: String = "비밀번호와 동일하지 않습니다."
     }
 
-    private val _loginLiveData = MutableLiveData<ViewModelTransferObject<LoginResponse>>()
-    val loginLiveData: LiveData<ViewModelTransferObject<LoginResponse>> get() = _loginLiveData
+    private val _loginLiveData = MutableLiveData<ResultWrapper<LoginResponse>>()
+    val loginLiveData: LiveData<ResultWrapper<LoginResponse>> get() = _loginLiveData
 
-    private val _registerLiveData = MutableLiveData<ViewModelTransferObject<RegisterResponse>>()
-    val registerLiveData: LiveData<ViewModelTransferObject<RegisterResponse>> get() = _registerLiveData
+    private val _registerLiveData = MutableLiveData<ResultWrapper<RegisterResponse>>()
+    val registerLiveData: LiveData<ResultWrapper<RegisterResponse>> get() = _registerLiveData
 
     fun isValidPassword(data: Any, str: String): Boolean {
 
@@ -113,45 +112,19 @@ class AuthViewModel(private val repository: AuthRepository, private val context:
 
     fun registerUser(userId:String, password:String, passwordAgain:String, name:String){
         viewModelScope.launch {
-            when(val registerResponse = repository.createUser(userId, password, passwordAgain, name)){
-                is ResultWrapper.GenericError ->{
-                    _registerLiveData.value = ViewModelTransferObject.GenericError(registerResponse.error)
-                    _registerLiveData.postValue(ViewModelTransferObject.GenericError(registerResponse.error))
-                }
-                is ResultWrapper.NetworkError ->{
-                    _registerLiveData.value = ViewModelTransferObject.NetworkError
-                    _registerLiveData.postValue(ViewModelTransferObject.NetworkError)
-                }
-                is ResultWrapper.Success -> {
-                    _registerLiveData.value = ViewModelTransferObject.Success(registerResponse.value)
-                    _registerLiveData.postValue(ViewModelTransferObject.Success(registerResponse.value))
-                }
-            }
+            _registerLiveData.value = repository.createUser(userId, password, passwordAgain, name)
         }
     }
+
 
     fun loginUser(userId:String, password:String){
         if(repository.isLogin()){
             //화면 전환
-            _loginLiveData.value = ViewModelTransferObject.Success(LoginResponse(""))
-            _loginLiveData.postValue(ViewModelTransferObject.Success(LoginResponse("")))
+            _loginLiveData.value = ResultWrapper.Success(LoginResponse(sharedPreferences.getToken()))
         }
         else{
             viewModelScope.launch {
-                when(val loginResponse = repository.login(userId, password)){
-                    is ResultWrapper.GenericError -> {
-                        _loginLiveData.value = ViewModelTransferObject.GenericError(loginResponse.error)
-                        _loginLiveData.postValue(ViewModelTransferObject.GenericError(loginResponse.error))
-                    }
-                    is ResultWrapper.NetworkError -> {
-                        _loginLiveData.value = ViewModelTransferObject.NetworkError
-                        _loginLiveData.postValue(ViewModelTransferObject.NetworkError)
-                    }
-                    is ResultWrapper.Success -> {
-                        _loginLiveData.value = ViewModelTransferObject.Success(loginResponse.value)
-                        _loginLiveData.postValue(ViewModelTransferObject.Success(loginResponse.value))
-                    }
-                }
+                _loginLiveData.value = repository.login(userId, password)
             }
         }
     }

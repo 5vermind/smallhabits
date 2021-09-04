@@ -1,43 +1,43 @@
-//package com.h2ve.smallhabits.repository
-//
-//import com.h2ve.smallhabits.model.ErrorResponse
-//import com.h2ve.smallhabits.util.NetworkUtils
-//import kotlinx.coroutines.CoroutineDispatcher
-//import kotlinx.coroutines.withContext
-//import org.koin.core.context.GlobalContext
-//import retrofit2.HttpException
-//import retrofit2.Retrofit
-//import java.io.IOException
-//import java.lang.Exception
-//
-//suspend fun <T> safeApiCall(dispatcher: CoroutineDispatcher, apiCall: suspend () -> T): ResultWrapper<T>{
-//    return withContext(dispatcher){
-//        try {
-//            ResultWrapper.Success(apiCall.invoke())
-//        }
-//        catch (throwable: Throwable){
-//            when(throwable){
-//                is IOException -> ResultWrapper.NetworkError
-//                is HttpException -> {
-//                    val code = throwable.code()
-//                    val errorResponse = convertErrorBody(throwable)
-//                    ResultWrapper.GenericError(code, errorResponse)
-//                }
-//                else -> {
-//                    ResultWrapper.GenericError(null, null)
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//fun convertErrorBody(throwable: HttpException): ErrorResponse? {
-//    return try {
-//        throwable.response()?.errorBody()?.let {
-//            val retrofit: Retrofit = GlobalContext.get().koin.get()
-//            retrofit.responseBodyConverter<ErrorResponse>(ErrorResponse::class.java, ErrorResponse::class.java.annotations).convert(it)
-//        }
-//    }catch (exception: Exception){
-//        null
-//    }
-//}
+package com.h2ve.smallhabits.repository
+
+import com.google.gson.Gson
+import com.h2ve.smallhabits.model.ErrorResponse
+import kotlinx.coroutines.withContext
+import okhttp3.ResponseBody
+import retrofit2.HttpException
+import retrofit2.Response
+import retrofit2.Retrofit
+import java.io.IOException
+import kotlin.coroutines.CoroutineContext
+
+suspend fun <T> safeApiCall(context: CoroutineContext, apiCall: suspend () -> Response<T>): ResultWrapper<T>{
+    return withContext(context){
+        try {
+            val response = apiCall.invoke()
+            if(response.isSuccessful){
+                ResultWrapper.Success(response.body()!!)
+            }
+            else{
+                ResultWrapper.GenericError(getErrorResponse(response.errorBody()!!), response.code())
+            }
+        }
+        catch (e: Throwable){
+            when(e){
+                is IOException -> ResultWrapper.NetworkError
+                is HttpException -> {
+                    val code = e.code()
+                    val errorResponse = getErrorResponse(e.response()?.errorBody()!!)
+                    ResultWrapper.GenericError(errorResponse, code)
+                }
+                else -> {
+                    ResultWrapper.GenericError(null, null)
+                }
+            }
+        }
+    }
+}
+
+private fun getErrorResponse(errorBody: ResponseBody): ErrorResponse {
+    val gson = Gson()
+    return gson.fromJson(errorBody.string(), ErrorResponse::class.java)
+}
