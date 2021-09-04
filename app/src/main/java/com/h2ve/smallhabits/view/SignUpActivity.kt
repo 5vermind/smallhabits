@@ -1,21 +1,13 @@
 package com.h2ve.smallhabits.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.h2ve.smallhabits.R
-import com.h2ve.smallhabits.model.RegisterRes
 import com.h2ve.smallhabits.databinding.ActivitySignupBinding
-import com.h2ve.smallhabits.network.ApiService
-import com.h2ve.smallhabits.repository.AuthRepository
 import com.h2ve.smallhabits.viewmodel.AuthViewModel
-import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.util.regex.Pattern
-import kotlin.math.log
 
 
 class SignUpActivity: AppCompatActivity() {

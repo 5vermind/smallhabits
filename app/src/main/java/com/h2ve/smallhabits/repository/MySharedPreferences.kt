@@ -2,47 +2,67 @@ package com.h2ve.smallhabits.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import org.koin.android.ext.koin.androidContext
+import org.koin.dsl.module
 
-object MySharedPreferences {
+
+val sharedPreferencesModule = module {
+    single { MySharedPreferences(androidContext()) }
+}
+
+
+class MySharedPreferences(private val context: Context) {
     private val MY_ACCOUNT : String = "MY_ACCOUNT"
 
-    fun setUserId(context: Context, input: String) {
+    fun setUserId(input: String) {
         val prefs : SharedPreferences = context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         val editor : SharedPreferences.Editor = prefs.edit()
         editor.putString("MY_ID", input)
         editor.apply()
     }
 
-    fun getUserId(context: Context): String {
+    fun getUserId(): String {
         val prefs : SharedPreferences = context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         return prefs.getString("MY_ID", "").toString()
     }
 
-    fun setUserPass(context: Context, input: String) {
+    fun setToken(token: String){
+        val prefs : SharedPreferences = context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        val editor : SharedPreferences.Editor = prefs.edit()
+        editor.putString("TOKEN", token)
+        editor.apply()
+    }
+
+    fun getToken(): String{
+        val prefs: SharedPreferences = context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        return prefs.getString("TOKEN", "").toString()
+    }
+
+    fun setUserPass(input: String) {
         val prefs : SharedPreferences = context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         val editor : SharedPreferences.Editor = prefs.edit()
         editor.putString("MY_PASS", input)
         editor.apply()
     }
 
-    fun getUserPass(context: Context): String {
+    fun getUserPass(): String {
         val prefs : SharedPreferences = context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         return prefs.getString("MY_PASS", "").toString()
     }
 
-    fun setUserNick(context: Context, input: String) {
+    fun setUserNick(input: String) {
         val prefs : SharedPreferences = context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         val editor : SharedPreferences.Editor = prefs.edit()
         editor.putString("MY_NICK", input)
         editor.apply()
     }
 
-    fun getUserNick(context: Context): String {
+    fun getUserNick(): String {
         val prefs : SharedPreferences = context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         return prefs.getString("MY_NICK", "").toString()
     }
 
-    fun clearUser(context: Context) {
+    fun clearUser() {
         val prefs : SharedPreferences = context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         val editor : SharedPreferences.Editor = prefs.edit()
         editor.clear()
