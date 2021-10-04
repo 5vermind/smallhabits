@@ -1,8 +1,9 @@
 package com.h2ve.smallhabits.model
 
-data class LoginRes (
-        var token: String,
-        var message: String
+import com.google.gson.annotations.SerializedName
+
+data class LoginResponse (
+        var token: String
         )
 
 data class LogoutRes (
@@ -10,10 +11,9 @@ data class LogoutRes (
         var resultCode: String
         )
 
-data class RegisterRes (
+data class RegisterResponse (
         var userId: String,
-        var name: String,
-        var message: String
+        var name: String
         )
 
 data class Login(
@@ -37,7 +37,7 @@ data class HabitPost(
         var nextHabit: String
 )
 
-data class HabitRes(
+data class HabitResponse(
         var title: String,
         var detail: String,
         var timeToDo: String,
@@ -49,14 +49,13 @@ data class HabitRes(
         var calendar: Array<String>
 )
 
-data class HabitTemp(
-        var title: String,
-        var progress: Int,
-        var thumbnail: String,
-//        var detail: String,
-//        var timeToDo: String,
-//        var placeToDo: String,
-//        var rating: Int,
-//        var nextHabit: String,
-        var id: Int
+data class ErrorResponse(
+        @SerializedName("errorAt") var errorAt:String,
+        @SerializedName("message") var message: String
 )
+
+sealed class ViewModelTransferObject<out T> {
+        data class Success<out T>(val value : T) : ViewModelTransferObject<T>()
+        data class GenericError(val error: ErrorResponse? = null): ViewModelTransferObject<Nothing>()
+        object NetworkError: ViewModelTransferObject<Nothing>()
+}

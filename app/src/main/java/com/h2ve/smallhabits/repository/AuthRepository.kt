@@ -1,47 +1,40 @@
 package com.h2ve.smallhabits.repository
 
-import android.app.AlertDialog
-import android.content.Context
-import android.widget.Toast
-import com.h2ve.smallhabits.model.LoginRes
-import com.h2ve.smallhabits.model.RegisterRes
+import com.h2ve.smallhabits.model.LoginResponse
+import com.h2ve.smallhabits.model.RegisterResponse
 import com.h2ve.smallhabits.network.ApiService
+import kotlinx.coroutines.*
 import org.koin.dsl.module
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlin.coroutines.CoroutineContext
 
 
 val authModule = module {
-    factory { AuthRepository(get()) }
+    factory { AuthRepository(get(), get()) }
 }
 
+class AuthRepository(
+    private val api: ApiService,
+    private val sharedPreferences: MySharedPreferences,
+    private val job: CompletableJob = SupervisorJob(),
+    private val coroutineContext: CoroutineContext = Dispatchers.IO + job
+) {
 
-class AuthRepository(private val api: ApiService) {
+    suspend fun createUser(userId: String, password: String, passwordAgain: String, name: String): ResultWrapper<RegisterResponse> {
+        return safeApiCall(coroutineContext) { api.postAuthRegister(userId, password, passwordAgain, name) }
+    }
 
-    suspend fun createUser(userId: String, password: String, passwordAgain: String, name: String) = api.reqAuthRegister(userId, password, passwordAgain, name)
-    suspend fun getUser(userId: String, password: String) = api.reqAuthLogin(userId, password)
+    suspend fun login(userId: String, password: String): ResultWrapper<LoginResponse> {
+        val response: ResultWrapper<LoginResponse> = safeApiCall(coroutineContext) { api.postAuthLogin(userId, password) }
+        when(response){
+            is ResultWrapper.Success -> {
+                sharedPreferences.setToken(response.value.token)
+            }
+            else -> {}
+        }
+        return response
+    }
 
-
-//    fun getUser(context: Context, service: ApiService, userId: String, password: String){
-//        service.reqLogin(userId, password).enqueue(object : Callback<LoginRes>{
-//            override fun onResponse(call: Call<LoginRes>, response: Response<LoginRes>) {
-//                val loginRes = response.body()
-//                if(response.code() == 200){
-//                    if (loginRes != null) {
-//                        Toast.makeText(context, "register api\nuserId: " + loginRes.token, Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-//                else{
-//                    Toast.makeText(context, "fail", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<LoginRes>, t: Throwable) {
-//                val dialog = AlertDialog.Builder(context)
-//                dialog.setTitle("register api\nFailed connection")
-//                dialog.show()
-//            }
-//        })
-//    }
+    fun isLogin(): Boolean {
+        return sharedPreferences.getToken() != ""
+    }
 }

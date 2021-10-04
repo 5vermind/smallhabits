@@ -8,7 +8,10 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.h2ve.smallhabits.R
 import com.h2ve.smallhabits.databinding.ActivityMainBinding
+import com.h2ve.smallhabits.model.ViewModelTransferObject
 import com.h2ve.smallhabits.util.BaseViewBindingActivity
+import com.h2ve.smallhabits.viewmodel.HabitViewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 import kotlin.system.exitProcess
 
 class MainActivity: BaseViewBindingActivity<ActivityMainBinding>(bindingFactory = { ActivityMainBinding.inflate(it)}) {

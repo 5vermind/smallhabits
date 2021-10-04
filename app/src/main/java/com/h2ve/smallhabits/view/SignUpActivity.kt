@@ -1,6 +1,5 @@
 package com.h2ve.smallhabits.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
