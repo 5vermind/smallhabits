@@ -14,7 +14,8 @@ import java.util.*
 
 class HabitGridListAdapter : RecyclerView.Adapter<HabitGridListAdapter.HabitGridListViewHolder>() {
 
-    private var list = arrayListOf<HabitTemp>()
+    private var list = arrayListOf<HabitTemp>(HabitTemp("title_1", 90, "", 1), HabitTemp("title_2", 75, "", 2),
+        HabitTemp("title_3", 15, "", 3), HabitTemp("title_4", 45, "", 4), HabitTemp("title_5", 33, "", 5))
 
     interface ItemClickListener {
         fun onClick(view: View, id: HabitTemp)
@@ -43,11 +44,11 @@ class HabitGridListAdapter : RecyclerView.Adapter<HabitGridListAdapter.HabitGrid
 //                .load(item.thumbnail)
 //                .apply(RequestOptions().placeholder(R.drawable.ic_plus_b))
 //                .into(binding.ivBoardThumbnail)
-//            listBinding.tvBoardTitle.text = item.title
-//            listBinding.tvBoardCommentNum.text = item.commentCount.toString()
-//            listBinding.root.setOnClickListener {
-//                itemClickListener.onClick(it, item)
-//            }
+            binding.tvTitle.text = item.title
+            binding.tvProgress.text = item.progress.toString()
+            binding.root.setOnClickListener {
+                itemClickListener.onClick(it, item)
+            }
         }
     }
 }
